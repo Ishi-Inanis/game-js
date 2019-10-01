@@ -25,6 +25,16 @@
 			background-color: #cbb;
 			border-radius: 5px;
 		}
+		#end {
+			position: absolute;
+			width: 100px;
+			height: 100px;
+			left: 0;
+			bottom: 0;
+			background-color: #bcb;
+			border-radius: 5px;
+			display: none;
+		}
 		#obj {
 			position: absolute;
 			width: 100px;
@@ -54,10 +64,11 @@
 	<div id="key">
 		<!-- <img class="player" src="down.svg" alt="Стрелка" style="width: 100px; height: 100px;"> -->
 	</div>
+	<div id="end"></div>
 	<div id="obj">
 		<!-- <img class="player" src="assets/down.svg" alt="Стрелка" style="width: 100px; height: 100px;"> -->
 	</div>
-	<table>
+	<table id="control">
 		<tr>
 			<td></td>
 			<td>
@@ -70,7 +81,7 @@
 				<button id="leftClick"><</button>
 			</td>
 			<td>
-				<button id="take">O</button>
+				<button id="act">O</button>
 			</td>
 			<td>
 				<button id="rightClick">></button>
@@ -181,17 +192,29 @@
 				midPosY: parseInt(window.getComputedStyle(key,null).getPropertyValue("bottom")) + parseInt(window.getComputedStyle(key,null).getPropertyValue("height")) / 2
 			}
 			if (
+				(key.style.display != "none") &
 				(Math.abs(keyObj.midPosX - unit.objParams.midPosX) < Math.abs((keyObj.width + unit.objParams.width) / 2)) &
 				(Math.abs(keyObj.midPosY - unit.objParams.midPosY) < Math.abs((keyObj.height + unit.objParams.height) / 2))
 			) {
 				console.table(keyObj);
 				console.table(unit);
+				key.style.display = "none";
+				end.style.display = "block";
 				alert("You take a KEY");
 			}
 		}
-		function test(a,b) {
-			c = a/2 + b/2;
-			console.log(c);
+
+		function endGame() {
+			if (
+				(end.style.display != "none") &
+				(unit.objParams.PosX == parseInt(window.getComputedStyle(end,null).getPropertyValue("left"))) &
+				(unit.objParams.PosY == parseInt(window.getComputedStyle(end,null).getPropertyValue("bottom")))
+			) {
+				obj.style.display = "none";
+				end.style.display = "none";
+				control.style.display = "none";
+				alert("The END");
+			}
 		}
 
 		// TODO: 	Обратиться к родительскому элементу
@@ -221,7 +244,13 @@
 //...
 
 		document.addEventListener("click", function(e) {
-			if(e.target.id == "take") take();
+			if(e.target.id == "act") {
+				if (key.style.display == "none") {
+					endGame();
+				} else {
+					take();
+				}
+			}
 			if(e.target.id == "upClick") unit.Up();
 			if(e.target.id == "downClick") unit.Down();
 			if(e.target.id == "leftClick") unit.Left();
@@ -232,7 +261,13 @@
 			if(e.code == "ArrowDown") unit.Down();
 			if(e.code == "ArrowLeft") unit.Left();
 			if(e.code == "ArrowRight") unit.Right();
-			if(e.code == "Numpad0") take();
+			if(e.code == "Numpad0") {
+				if (key.style.display == "none") {
+					endGame();
+				} else {
+					take();
+				}
+			}
 		});
 	</script>
 </body>
