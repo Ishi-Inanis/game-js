@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>game-js</title>
+	<style>
+		body {
+			background-color: #ddd;
+		}
+		p {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			border-radius: 10px;
+			background-color: rgba(0,0,0,0.1);
+			padding: 10px;
+			margin: 0;
+		}
+		#key {
+			position: absolute;
+			width: 100px;
+			height: 100px;
+			left: 50%;
+			bottom: 50%;
+			background-color: #cbb;
+			border-radius: 5px;
+		}
+		#obj {
+			position: absolute;
+			width: 100px;
+			height: 100px;
+			left: 100px;
+			bottom: 100px;
+			background-color: #bbc;
+			border-radius: 5px;
+		}
+		table {
+			position: absolute;
+			left: 50px;
+			bottom: 50px;
+			background-color: rgba(0,0,0,0.1);
+			border-radius: 50px;
+			padding: 5px;
+		}
+		button {
+			outline: none;
+			border-radius: 50px;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="key"></div>
+	<div id="obj"></div>
+	<table>
+		<tr>
+			<td></td>
+			<td>
+				<button id="upClick">^</button>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>
+				<button id="leftClick"><</button>
+			</td>
+			<td>
+				<button id="take">O</button>
+			</td>
+			<td>
+				<button id="rightClick">></button>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<button id="downClick">_</button>
+			</td>
+			<td></td>
+		</tr>
+	</table>
+	<script>
+		const winParams = {
+				height: window.innerHeight,
+				width: window.innerWidth
+			}
+		class Unit {
+			constructor(object) {
+				this.object = document.getElementById(object);
+				this.objParams = {
+					height: this.object.clientHeight,
+					width: this.object.clientWidth,
+					midPosX: 0,
+					midPosY: 0,
+					PosX: 0,
+					PosY: 0
+				}
+				this.reCalcPos();
+			}
+			reCalcPos() {
+				this.objParams.PosX = parseInt(window.getComputedStyle(this.object,null).getPropertyValue("left"));
+				this.objParams.PosY = parseInt(window.getComputedStyle(this.object,null).getPropertyValue("bottom"));
+				this.objParams.midPosX = this.objParams.PosX + this.objParams.width / 2;
+				this.objParams.midPosY = this.objParams.PosY + this.objParams.height / 2;
+			}
+			Up() {
+				if(this.objParams.PosY + this.objParams.height + 10 <= winParams.height)
+					this.object.style.bottom = this.objParams.PosY + 10 + 'px'
+				else
+					this.object.style.bottom = winParams.height - this.objParams.height + "px";
+				this.reCalcPos();
+			}
+			Down() {
+				if(this.objParams.PosY >= 10)
+					this.object.style.bottom = this.objParams.PosY - 10 + 'px'
+				else
+					this.object.style.bottom = 0;
+				this.reCalcPos();
+			}
+			Left() {
+				if(this.objParams.PosX >= 10)
+					this.object.style.left = this.objParams.PosX - 10 + 'px'
+				else
+					this.object.style.left = 0;
+				this.reCalcPos();
+			}
+			Right() {
+				if(this.objParams.PosX + this.objParams.width + 10 <= winParams.width)
+					this.object.style.left = this.objParams.PosX + 10 + 'px'
+				else
+					this.object.style.left = winParams.width - this.objParams.width + "px";
+				this.reCalcPos();
+			}
+		}
+		let unit = new Unit('obj');
+		function take() {
+			keyObj = {
+				width: parseInt(window.getComputedStyle(key,null).getPropertyValue("width")),
+				height: parseInt(window.getComputedStyle(key,null).getPropertyValue("height")),
+				midPosX: parseInt(window.getComputedStyle(key,null).getPropertyValue("left")) + parseInt(window.getComputedStyle(key,null).getPropertyValue("width")) / 2,
+				midPosY: parseInt(window.getComputedStyle(key,null).getPropertyValue("bottom")) + parseInt(window.getComputedStyle(key,null).getPropertyValue("height")) / 2
+			}
+			if (
+				(Math.abs(keyObj.midPosX - unit.objParams.midPosX) < Math.abs((keyObj.width + unit.objParams.width) / 2)) &
+				(Math.abs(keyObj.midPosY - unit.objParams.midPosY) < Math.abs((keyObj.height + unit.objParams.height) / 2))
+			) {
+				alert("You take a KEY");
+			}
+		}
+		document.addEventListener("click", function(e) {
+			if(e.target.id == "take") take();
+			if(e.target.id == "upClick") unit.Up();
+			if(e.target.id == "downClick") unit.Down();
+			if(e.target.id == "leftClick") unit.Left();
+			if(e.target.id == "rightClick")	unit.Right();
+		});
+		document.addEventListener("keydown", function(e) {
+			if(e.code == "ArrowUp")	unit.Up();
+			if(e.code == "ArrowDown") unit.Down();
+			if(e.code == "ArrowLeft") unit.Left();
+			if(e.code == "ArrowRight") unit.Right();
+			if(e.code == "Numpad0") take();
+		});
+	</script>
+</body>
+</html>
