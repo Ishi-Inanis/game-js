@@ -51,8 +51,12 @@
 	</style>
 </head>
 <body>
-	<div id="key"></div>
-	<div id="obj"></div>
+	<div id="key">
+		<!-- <img class="player" src="down.svg" alt="Стрелка" style="width: 100px; height: 100px;"> -->
+	</div>
+	<div id="obj">
+		<!-- <img class="player" src="assets/down.svg" alt="Стрелка" style="width: 100px; height: 100px;"> -->
+	</div>
 	<table>
 		<tr>
 			<td></td>
@@ -105,6 +109,7 @@
 				this.objParams.midPosY = this.objParams.PosY + this.objParams.height / 2;
 			}
 			Up() {
+				// document.querySelector('.player').src = 'assets/up.svg';
 				if(this.objParams.PosY + this.objParams.height + 10 <= winParams.height)
 					this.object.style.bottom = this.objParams.PosY + 10 + 'px'
 				else
@@ -112,6 +117,7 @@
 				this.reCalcPos();
 			}
 			Down() {
+				// document.querySelector('.player').src = 'assets/down.svg';
 				if(this.objParams.PosY >= 10)
 					this.object.style.bottom = this.objParams.PosY - 10 + 'px'
 				else
@@ -119,6 +125,7 @@
 				this.reCalcPos();
 			}
 			Left() {
+				// document.querySelector('.player').src = 'assets/left.svg';
 				if(this.objParams.PosX >= 10)
 					this.object.style.left = this.objParams.PosX - 10 + 'px'
 				else
@@ -126,14 +133,46 @@
 				this.reCalcPos();
 			}
 			Right() {
+				// document.querySelector('.player').src = 'assets/right.svg';
 				if(this.objParams.PosX + this.objParams.width + 10 <= winParams.width)
 					this.object.style.left = this.objParams.PosX + 10 + 'px'
 				else
 					this.object.style.left = winParams.width - this.objParams.width + "px";
 				this.reCalcPos();
 			}
+
+			// Неудачные попытки 17.09.2019 ...
+
+						// t3() {
+						// 	alert(1);
+						// }
+						// Test = {
+						// 	t1: function() {
+						// 		this.t3();
+						// 	},
+						// 	t2: function() {
+						// 		this.t1.call(Move);
+						// 	}
+						// }
+
+			//... 22:32
+
 		}
 		let unit = new Unit('obj');
+
+// 		function CreateObject(idObj) {
+// 			let div = document.createElement('div');
+// 			div.id = idObj;
+// 			div.style.position = "absolute";
+// // Удалить ...
+// 			div.style.width = 100 + 'px';
+// 			div.style.height = 100 + 'px';
+// 			div.style.backgroundColor = "red";
+// //...
+// 			document.body.append(div);
+// 			idObj = new Unit(idObj);
+// 		}
+
 		function take() {
 			keyObj = {
 				width: parseInt(window.getComputedStyle(key,null).getPropertyValue("width")),
@@ -145,9 +184,42 @@
 				(Math.abs(keyObj.midPosX - unit.objParams.midPosX) < Math.abs((keyObj.width + unit.objParams.width) / 2)) &
 				(Math.abs(keyObj.midPosY - unit.objParams.midPosY) < Math.abs((keyObj.height + unit.objParams.height) / 2))
 			) {
+				console.table(keyObj);
+				console.table(unit);
 				alert("You take a KEY");
 			}
 		}
+		function test(a,b) {
+			c = a/2 + b/2;
+			console.log(c);
+		}
+
+		// TODO: 	Обратиться к родительскому элементу
+		//				Доделать подъем ключа
+		//				Доделать создание экземпляра и объекта DOM через Create()
+		// 				Создание объекта с именем idObj, может стоит внести в конструктор класса
+
+// Анимация
+		// obj.onclick = function() {
+		// 	let start = Date.now();
+		// 	let timer = setInterval(function() {
+		// 		let timePassed = Date.now() - start;
+
+		// 		if (timePassed >= 100) {
+		// 	    	clearInterval(timer);
+		// 			return;
+		// 	  	}
+		// 	  	draw(timePassed);
+		// 	}, 10);
+		// }
+		// function draw(timePassed) {
+		// 	unit.reCalcPos();
+		// 	console.log(unit.objParams.PosX);
+		// 	// obj.style.left = (unit.objParams.PosX + (timePassed)/10) + 'px';
+		// 	obj.style.left = unit.objParams.PosX + 50 * (10/100) + 'px';
+		// }
+//...
+
 		document.addEventListener("click", function(e) {
 			if(e.target.id == "take") take();
 			if(e.target.id == "upClick") unit.Up();
