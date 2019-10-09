@@ -61,13 +61,9 @@
 	</style>
 </head>
 <body>
-	<div id="key">
-		<!-- <img class="player" src="down.svg" alt="Стрелка" style="width: 100px; height: 100px;"> -->
-	</div>
+	<div id="key"></div>
 	<div id="end"></div>
-	<div id="obj">
-		<!-- <img class="player" src="assets/down.svg" alt="Стрелка" style="width: 100px; height: 100px;"> -->
-	</div>
+	<div id="obj"></div>
 	<table id="control">
 		<tr>
 			<td></td>
@@ -97,177 +93,115 @@
 	</table>
 	<script>
 		const winParams = {
-				height: window.innerHeight,
-				width: window.innerWidth
-			}
+		    height: window.innerHeight,
+		    width: window.innerWidth
+		  }
 		class Unit {
-			constructor(object) {
-				this.object = document.getElementById(object);
-				this.objParams = {
-					height: this.object.clientHeight,
-					width: this.object.clientWidth,
-					midPosX: 0,
-					midPosY: 0,
-					PosX: 0,
-					PosY: 0
-				}
-				this.reCalcPos();
-			}
-			reCalcPos() {
-				this.objParams.PosX = parseInt(window.getComputedStyle(this.object,null).getPropertyValue("left"));
-				this.objParams.PosY = parseInt(window.getComputedStyle(this.object,null).getPropertyValue("bottom"));
-				this.objParams.midPosX = this.objParams.PosX + this.objParams.width / 2;
-				this.objParams.midPosY = this.objParams.PosY + this.objParams.height / 2;
-			}
-			Up() {
-				// document.querySelector('.player').src = 'assets/up.svg';
-				if(this.objParams.PosY + this.objParams.height + 10 <= winParams.height)
-					this.object.style.bottom = this.objParams.PosY + 10 + 'px'
-				else
-					this.object.style.bottom = winParams.height - this.objParams.height + "px";
-				this.reCalcPos();
-			}
-			Down() {
-				// document.querySelector('.player').src = 'assets/down.svg';
-				if(this.objParams.PosY >= 10)
-					this.object.style.bottom = this.objParams.PosY - 10 + 'px'
-				else
-					this.object.style.bottom = 0;
-				this.reCalcPos();
-			}
-			Left() {
-				// document.querySelector('.player').src = 'assets/left.svg';
-				if(this.objParams.PosX >= 10)
-					this.object.style.left = this.objParams.PosX - 10 + 'px'
-				else
-					this.object.style.left = 0;
-				this.reCalcPos();
-			}
-			Right() {
-				// document.querySelector('.player').src = 'assets/right.svg';
-				if(this.objParams.PosX + this.objParams.width + 10 <= winParams.width)
-					this.object.style.left = this.objParams.PosX + 10 + 'px'
-				else
-					this.object.style.left = winParams.width - this.objParams.width + "px";
-				this.reCalcPos();
-			}
-
-			// Неудачные попытки 17.09.2019 ...
-
-						// t3() {
-						// 	alert(1);
-						// }
-						// Test = {
-						// 	t1: function() {
-						// 		this.t3();
-						// 	},
-						// 	t2: function() {
-						// 		this.t1.call(Move);
-						// 	}
-						// }
-
-			//... 22:32
-
+		  constructor(object) {
+		    this.object = document.getElementById(object);
+		    this.objParams = {
+		      height: this.object.clientHeight,
+		      width: this.object.clientWidth,
+		      midPosX: 0,
+		      midPosY: 0,
+		      PosX: 0,
+		      PosY: 0
+		    }
+		    this.reCalcPos();
+		  }
+		  reCalcPos() {
+		    this.objParams.PosX = parseInt(window.getComputedStyle(this.object,null).getPropertyValue("left"));
+		    this.objParams.PosY = parseInt(window.getComputedStyle(this.object,null).getPropertyValue("bottom"));
+		    this.objParams.midPosX = this.objParams.PosX + this.objParams.width / 2;
+		    this.objParams.midPosY = this.objParams.PosY + this.objParams.height / 2;
+		  }
+		  Move = new (function(parent) {
+		    this.parent = parent;
+		    this.Up = function() {
+		      if (this.parent.objParams.PosY + this.parent.objParams.height + 10 <= winParams.height)
+		        this.parent.object.style.bottom = this.parent.objParams.PosY + 10 + 'px'
+		      else
+		        this.parent.object.style.bottom = winParams.height - this.parent.objParams.height + "px";
+		      this.parent.reCalcPos();
+		    };
+		    this.Down = function() {
+		      if (this.parent.objParams.PosY >= 10)
+		        this.parent.object.style.bottom = this.parent.objParams.PosY - 10 + 'px'
+		      else
+		        this.parent.object.style.bottom = 0;
+		      this.parent.reCalcPos();
+		    };
+		    this.Left = function() {
+		      if (this.parent.objParams.PosX >= 10)
+		        this.parent.object.style.left = this.parent.objParams.PosX - 10 + 'px'
+		      else
+		        this.parent.object.style.left = 0;
+		      this.parent.reCalcPos();
+		    };
+		    this.Right = function() {
+		      if (this.parent.objParams.PosX + this.parent.objParams.width + 10 <= winParams.width)
+		        this.parent.object.style.left = this.parent.objParams.PosX + 10 + 'px'
+		      else
+		        this.parent.object.style.left = winParams.width - this.parent.objParams.width + "px";
+		      this.parent.reCalcPos();
+		    };
+		  })(this);
 		}
 		let unit = new Unit('obj');
-
-// 		function CreateObject(idObj) {
-// 			let div = document.createElement('div');
-// 			div.id = idObj;
-// 			div.style.position = "absolute";
-// // Удалить ...
-// 			div.style.width = 100 + 'px';
-// 			div.style.height = 100 + 'px';
-// 			div.style.backgroundColor = "red";
-// //...
-// 			document.body.append(div);
-// 			idObj = new Unit(idObj);
-// 		}
-
 		function take() {
-			keyObj = {
-				width: parseInt(window.getComputedStyle(key,null).getPropertyValue("width")),
-				height: parseInt(window.getComputedStyle(key,null).getPropertyValue("height")),
-				midPosX: parseInt(window.getComputedStyle(key,null).getPropertyValue("left")) + parseInt(window.getComputedStyle(key,null).getPropertyValue("width")) / 2,
-				midPosY: parseInt(window.getComputedStyle(key,null).getPropertyValue("bottom")) + parseInt(window.getComputedStyle(key,null).getPropertyValue("height")) / 2
-			}
-			if (
-				(key.style.display != "none") &
-				(Math.abs(keyObj.midPosX - unit.objParams.midPosX) < Math.abs((keyObj.width + unit.objParams.width) / 2)) &
-				(Math.abs(keyObj.midPosY - unit.objParams.midPosY) < Math.abs((keyObj.height + unit.objParams.height) / 2))
-			) {
-				console.table(keyObj);
-				console.table(unit);
-				key.style.display = "none";
-				end.style.display = "block";
-				alert("You take a KEY");
-			}
+		  keyObj = {
+		    width: parseInt(window.getComputedStyle(key,null).getPropertyValue("width")),
+		    height: parseInt(window.getComputedStyle(key,null).getPropertyValue("height")),
+		    midPosX: parseInt(window.getComputedStyle(key,null).getPropertyValue("left")) + parseInt(window.getComputedStyle(key,null).getPropertyValue("width")) / 2,
+		    midPosY: parseInt(window.getComputedStyle(key,null).getPropertyValue("bottom")) + parseInt(window.getComputedStyle(key,null).getPropertyValue("height")) / 2
+		  }
+		  if (
+		    (key.style.display != "none") &
+		    (Math.abs(keyObj.midPosX - unit.objParams.midPosX) < Math.abs((keyObj.width + unit.objParams.width) / 2)) &
+		    (Math.abs(keyObj.midPosY - unit.objParams.midPosY) < Math.abs((keyObj.height + unit.objParams.height) / 2))
+		  ) {
+		    key.style.display = "none";
+		    end.style.display = "block";
+		    alert("You take a KEY");
+		  }
 		}
-
 		function endGame() {
-			if (
-				(end.style.display != "none") &
-				(unit.objParams.PosX == parseInt(window.getComputedStyle(end,null).getPropertyValue("left"))) &
-				(unit.objParams.PosY == parseInt(window.getComputedStyle(end,null).getPropertyValue("bottom")))
-			) {
-				obj.style.display = "none";
-				end.style.display = "none";
-				control.style.display = "none";
-				alert("The END");
-			}
+		  if (
+		    (end.style.display != "none") &
+		    (unit.objParams.PosX == parseInt(window.getComputedStyle(end,null).getPropertyValue("left"))) &
+		    (unit.objParams.PosY == parseInt(window.getComputedStyle(end,null).getPropertyValue("bottom")))
+		  ) {
+		    obj.style.display = "none";
+		    end.style.display = "none";
+		    control.style.display = "none";
+		    alert("The END");
+		  }
 		}
-
-		// TODO: 	Обратиться к родительскому элементу
-		//				Доделать подъем ключа
-		//				Доделать создание экземпляра и объекта DOM через Create()
-		// 				Создание объекта с именем idObj, может стоит внести в конструктор класса
-
-// Анимация
-		// obj.onclick = function() {
-		// 	let start = Date.now();
-		// 	let timer = setInterval(function() {
-		// 		let timePassed = Date.now() - start;
-
-		// 		if (timePassed >= 100) {
-		// 	    	clearInterval(timer);
-		// 			return;
-		// 	  	}
-		// 	  	draw(timePassed);
-		// 	}, 10);
-		// }
-		// function draw(timePassed) {
-		// 	unit.reCalcPos();
-		// 	console.log(unit.objParams.PosX);
-		// 	// obj.style.left = (unit.objParams.PosX + (timePassed)/10) + 'px';
-		// 	obj.style.left = unit.objParams.PosX + 50 * (10/100) + 'px';
-		// }
-//...
-
 		document.addEventListener("click", function(e) {
-			if(e.target.id == "act") {
-				if (key.style.display == "none") {
-					endGame();
-				} else {
-					take();
-				}
-			}
-			if(e.target.id == "upClick") unit.Up();
-			if(e.target.id == "downClick") unit.Down();
-			if(e.target.id == "leftClick") unit.Left();
-			if(e.target.id == "rightClick")	unit.Right();
+		  if (e.target.id == "act") {
+		    if (key.style.display == "none") {
+		      endGame();
+		    } else {
+		      take();
+		    }
+		  }
+		  if (e.target.id == "upClick") unit.Move.Up();
+		  if (e.target.id == "downClick") unit.Move.Down();
+		  if (e.target.id == "leftClick") unit.Move.Left();
+		  if (e.target.id == "rightClick")	unit.Move.Right();
 		});
 		document.addEventListener("keydown", function(e) {
-			if(e.code == "ArrowUp")	unit.Up();
-			if(e.code == "ArrowDown") unit.Down();
-			if(e.code == "ArrowLeft") unit.Left();
-			if(e.code == "ArrowRight") unit.Right();
-			if(e.code == "Numpad0") {
-				if (key.style.display == "none") {
-					endGame();
-				} else {
-					take();
-				}
-			}
+		  if (e.code == "ArrowUp")	unit.Move.Up();
+		  if (e.code == "ArrowDown") unit.Move.Down();
+		  if (e.code == "ArrowLeft") unit.Move.Left();
+		  if (e.code == "ArrowRight") unit.Move.Right();
+		  if (e.code == "Numpad0") {
+		    if (key.style.display == "none") {
+		      endGame();
+		    } else {
+		      take();
+		    }
+		  }
 		});
 	</script>
 </body>
